@@ -1,8 +1,0 @@
-[build]
-  command = "npm install && gulp build"
-  publish = "html"
-
-[[redirects]]
-  from = "/*"
-  to = "/index-saas2.html"
-  status = 200

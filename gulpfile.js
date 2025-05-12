@@ -1,53 +1,57 @@
-const gulp = require('gulp'); //default
-const sass = require('sass'); // Reemplazado gulp-sass por sass
-const sassCompiler = require('gulp-sass')(sass); // Importante para que funcione correctamente
-const concat = require('gulp-concat'); //compile js plugins into one file
-const concatCss = require('gulp-concat-css'); //compile css plugins into one file
-const watch = require('gulp-watch'); //sass compile to css
+const gulp = require('gulp');
+const sass = require('gulp-sass')(require('sass')); // Usando gulp-sass v5+ con Dart Sass
+const concat = require('gulp-concat');
+const concatCss = require('gulp-concat-css');
+const { watch } = require('gulp'); // Usando watch de Gulp 4+
 
 // Tarea para compilar SASS
 gulp.task('sass', function () {
-    return gulp.src('html/scss/**/*.scss') // Carpeta donde están los archivos .scss
-        .pipe(sassCompiler().on('error', sassCompiler.logError)) // Usar sassCompiler en lugar de gulp-sass
-        .pipe(gulp.dest('html/css/')); // Carpeta de salida para los archivos CSS
-});
-
-// Tarea para observar cambios en los archivos SCSS
-gulp.task('watch', function () {
-    gulp.watch('html/scss/**/*.scss', gulp.series('sass')); // Observa los cambios en los archivos SCSS y ejecuta la tarea 'sass'
-});
-
-// Tarea para concatenar todos los archivos JS
-gulp.task('concat', function () {
-    return gulp.src(
-            [
-                'html/bower_components/jquery/dist/jquery.min.js',
-                'html/bootstrap/dist/js/bootstrap.min.js',
-                'html/js/jquery.easing.min.js',
-                'html/bower_components/wow/dist/wow.min.js',
-                'html/js/jquery.preloader.min.js',
-                'html/bower_components/magnific-popup/dist/jquery.magnific-popup.min.js',
-                'html/bower_components/jquery-knob/dist/jquery.knob.min.js',
-                'html/bower_components/owl.carousel/dist/owl.carousel.min.js',
-                'html/bower_components/jarallax/dist/jarallax.min.js',
-                'html/bower_components/jarallax/dist/jarallax-video.min.js',
-                'html/js/smooth-scroll.min.js'
-            ])
-        .pipe(concat('plugins.js'))
-        .pipe(gulp.dest('html/js/plugins/'));
-});
-
-// Tarea para concatenar todos los archivos CSS
-gulp.task('concatCss', function () {
-    return gulp.src([
-            'html/bower_components/font-awesome/css/font-awesome.min.css',
-            'html/css/animate.css',
-            'html/bower_components/magnific-popup/dist/magnific-popup.css',
-            'html/bower_components/owl.carousel/dist/assets/owl.carousel.min.css',
-            'html/bower_components/owl.carousel/dist/assets/owl.theme.default.min.css',
-            'html/et-line-font/style.css',
-            'html/bootstrap/dist/css/bootstrap.min.css'
-        ])
-        .pipe(concatCss("plugins/plugins.css"))
+    return gulp.src('html/scss/**/*.scss')
+        .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('html/css/'));
 });
+
+// Tarea para observar cambios en SASS (Gulp 4+)
+gulp.task('watch', function () {
+    watch('html/scss/**/*.scss', gulp.series('sass'));
+});
+
+// Tarea para concatenar JS
+gulp.task('concat', function () {
+    return gulp.src([
+        'html/bower_components/jquery/dist/jquery.min.js',
+        'html/bootstrap/dist/js/bootstrap.min.js',
+        'html/js/jquery.easing.min.js',
+        'html/bower_components/wow/dist/wow.min.js',
+        'html/js/jquery.preloader.min.js',
+        'html/bower_components/magnific-popup/dist/jquery.magnific-popup.min.js',
+        'html/bower_components/jquery-knob/dist/jquery.knob.min.js',
+        'html/bower_components/owl.carousel/dist/owl.carousel.min.js',
+        'html/bower_components/jarallax/dist/jarallax.min.js',
+        'html/bower_components/jarallax/dist/jarallax-video.min.js',
+        'html/js/smooth-scroll.min.js'
+    ])
+    .pipe(concat('plugins.js'))
+    .pipe(gulp.dest('html/js/plugins/'));
+});
+
+// Tarea para concatenar CSS
+gulp.task('concatCss', function () {
+    return gulp.src([
+        'html/bower_components/font-awesome/css/font-awesome.min.css',
+        'html/css/animate.css',
+        'html/bower_components/magnific-popup/dist/magnific-popup.css',
+        'html/bower_components/owl.carousel/dist/assets/owl.carousel.min.css',
+        'html/bower_components/owl.carousel/dist/assets/owl.theme.default.min.css',
+        'html/et-line-font/style.css',
+        'html/bootstrap/dist/css/bootstrap.min.css'
+    ])
+    .pipe(concatCss('plugins.css'))
+    .pipe(gulp.dest('html/css/plugins/'));
+});
+
+// Tarea por defecto (ejecuta todas las tareas)
+gulp.task('default', gulp.series('sass', 'concat', 'concatCss'));
+
+// Tarea para producción (Netlify)
+gulp.task('build', gulp.series('sass', 'concat', 'concatCss'));

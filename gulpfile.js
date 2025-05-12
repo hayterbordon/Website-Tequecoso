@@ -1,18 +1,23 @@
 var gulp = require('gulp'); //default
-var sass = require('gulp-sass');//sass complie
+var sass = require('sass'); // Reemplazado gulp-sass por sass
+var sassCompiler = require('gulp-sass')(sass); // Importante para que funcione correctamente
 var concat = require('gulp-concat'); //compile js plugins into one file
-var concatCss = require('gulp-concat-css');//compile css plugins into one file
+var concatCss = require('gulp-concat-css'); //compile css plugins into one file
 var watch = require('gulp-watch'); //sass compile to css
 
+// Tarea para compilar SASS
 gulp.task('sass', function () {
-    return gulp.src('html/scss/**/*.scss')
-            .pipe(sass().on('error', sass.logError))
-            .pipe(gulp.dest('html/css/'));
-});
-gulp.task('watch', function () {
-    gulp.watch('html/scss/**/*.scss', ['sass']);
+    return gulp.src('html/scss/**/*.scss') // Carpeta donde están los archivos .scss
+            .pipe(sassCompiler().on('error', sassCompiler.logError)) // Usar sassCompiler en lugar de gulp-sass
+            .pipe(gulp.dest('html/css/')); // Carpeta de salida para los archivos CSS
 });
 
+// Tarea para observar cambios en los archivos SCSS
+gulp.task('watch', function () {
+    gulp.watch('html/scss/**/*.scss', gulp.series('sass')); // Observa los cambios en los archivos SCSS y ejecuta la tarea 'sass'
+});
+
+// Tarea para concatenar todos los archivos JS
 gulp.task('concat', function () {
     return gulp.src(
             [
@@ -32,6 +37,7 @@ gulp.task('concat', function () {
             .pipe(gulp.dest('html/js/plugins/'));
 });
 
+// Tarea para concatenar todos los archivos CSS
 gulp.task('concatCss', function () {
     return gulp.src([
         'html/bower_components/font-awesome/css/font-awesome.min.css',

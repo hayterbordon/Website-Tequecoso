@@ -7,7 +7,7 @@ const { watch } = require('gulp'); // Usando watch de Gulp 4+
 // Tarea para compilar SASS
 gulp.task('sass', function () {
     return gulp.src('html/scss/**/*.scss')
-        .pipe(sass().on('error', sass.logError))
+        .pipe(sass().on('error', sass.logError)) // Maneja errores de compilación
         .pipe(gulp.dest('html/css/'));
 });
 
@@ -37,17 +37,25 @@ gulp.task('concat', function () {
 
 // Tarea para concatenar CSS
 gulp.task('concatCss', function () {
-    return gulp.src([
+    const cssFiles = [
         'html/bower_components/font-awesome/css/font-awesome.min.css',
         'html/css/animate.css',
         'html/bower_components/magnific-popup/dist/magnific-popup.css',
         'html/bower_components/owl.carousel/dist/assets/owl.carousel.min.css',
         'html/bower_components/owl.carousel/dist/assets/owl.theme.default.min.css',
-        'html/et-line-font/style.css',
         'html/bootstrap/dist/css/bootstrap.min.css'
-    ])
-    .pipe(concatCss('plugins.css'))
-    .pipe(gulp.dest('html/css/plugins/'));
+    ];
+
+    // Verificar si el archivo 'style.css' de linearicons existe antes de agregarlo
+    const fs = require('fs');
+    const lineariconsPath = 'html/linearicons/style.css';
+    if (fs.existsSync(lineariconsPath)) {
+        cssFiles.push(lineariconsPath); // Solo agregar si el archivo existe
+    }
+
+    return gulp.src(cssFiles, { allowEmpty: true }) // Permite archivos vacíos si no se encuentran
+        .pipe(concatCss('plugins.css'))
+        .pipe(gulp.dest('html/css/plugins/'));
 });
 
 // Tarea por defecto (ejecuta todas las tareas)

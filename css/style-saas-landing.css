@@ -10,6 +10,9 @@ Assan saas web app landing template stylesheet
   font-weight: normal;
   font-style: normal; }
 
+.descripcion-features {
+    color: #818181 !important; /* Cambia #333333 al color que desees, ej. un gris oscuro */
+}
 /*
 Basic of template
 */

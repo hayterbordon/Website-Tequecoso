@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const sass = require('gulp-dart-sass'); // Reemplazo moderno de gulp-sass
+const sass = require('gulp-sass')(require('sass')); // Cambiado aquí
 const concat = require('gulp-concat');
 const concatCss = require('gulp-concat-css');
 const watch = require('gulp-watch');
@@ -42,7 +42,7 @@ function concatCssPlugins() {
     'html/bootstrap/dist/css/bootstrap.min.css'
   ])
   .pipe(concatCss("plugins.css"))
-  .pipe(gulp.dest('html/css/plugins/')); // Cambiado a una subcarpeta más organizada
+  .pipe(gulp.dest('html/css/plugins/')); 
 }
 
 // 4. Vigila cambios en archivos SCSS
@@ -50,10 +50,10 @@ function watchFiles() {
   gulp.watch('html/scss/**/*.scss', compileSass);
 }
 
-// Tareas públicas (para ejecutar desde la terminal)
+// Exportar tareas
 exports.sass = compileSass;
 exports.concat = concatJs;
 exports.concatCss = concatCssPlugins;
 exports.watch = watchFiles;
-exports.build = gulp.series(compileSass, concatJs, concatCssPlugins); // Tarea principal
-exports.default = exports.build; // Por si ejecutas solo "gulp"
+exports.build = gulp.series(compileSass, concatJs, concatCssPlugins);
+exports.default = exports.build;

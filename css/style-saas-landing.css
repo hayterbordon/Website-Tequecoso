@@ -470,8 +470,8 @@ strong, b {
   position: relative;
   overflow: hidden;
   padding-bottom: 25px;
-  font-size: 2.2rem;
-  letter-spacing: -2px;
+  font-size: 1.4rem;
+  letter-spacing: 2px;
   font-weight: 500;
   }
   .section-title:after {

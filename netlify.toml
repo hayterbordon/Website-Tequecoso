@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/"
+  to = "/index-saas2.html"
+  status = 200

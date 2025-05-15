@@ -2,17 +2,21 @@ const gulp = require('gulp');
 const sassCompiler = require('gulp-sass')(require('sass'));
 const concat = require('gulp-concat');
 const concatCss = require('gulp-concat-css');
+const del = require('del');
 
-// Compila solo el archivo principal SCSS para evitar múltiples archivos
+function cleanDist() {
+  return del(['dist/**', '!dist']);
+}
+
 function compileSass() {
-  return gulp.src('scss/style-saas-landing.scss')  // apunta solo al principal
+  return gulp.src('scss/style-saas-landing.scss')
     .pipe(sassCompiler({
-      includePaths: ['scss', 'scss-saas-software'] // para importar parciales sin rutas largas
+      includePaths: ['scss', 'scss-saas-software']
     }).on('error', sassCompiler.logError))
     .pipe(gulp.dest('css/'));
 }
 
-// Concatena JS de plugins externos
+
 function concatJs() {
   return gulp.src([
     'bower_components/jquery/dist/jquery.min.js',
@@ -31,30 +35,50 @@ function concatJs() {
   .pipe(gulp.dest('js/plugins/'));
 }
 
-// Concatena CSS de plugins externos
+// Concatena CSS
 function concatCssPlugins() {
   return gulp.src([
     'bower_components/font-awesome/css/font-awesome.min.css',
-    'css/animate.css',  // tu CSS custom animaciones, asegúrate que exista
+    'css/animate.css',
     'bower_components/magnific-popup/dist/magnific-popup.css',
     'bower_components/owl.carousel/dist/assets/owl.carousel.min.css',
     'bower_components/owl.carousel/dist/assets/owl.theme.default.min.css',
-    // 'et-line-font/style.css', // Comentado porque no existe en tu proyecto
     'bootstrap/dist/css/bootstrap.min.css'
   ], { allowEmpty: true })
   .pipe(concatCss('plugins.css'))
   .pipe(gulp.dest('css/plugins/'));
 }
 
-// Vigila cambios en SCSS y JS
+
+function copyFiles() {
+  return gulp.src([
+    'index.html',
+    'css/**/*',
+    'js/**/*',
+    'images/**/*'
+  ], { base: '.' })
+  .pipe(gulp.dest('dist'));
+}
+
+
 function watchFiles() {
   gulp.watch('scss/**/*.scss', compileSass);
   gulp.watch('js/**/*.js', concatJs);
 }
 
+exports.clean = cleanDist;
 exports.sass = compileSass;
 exports.concatJs = concatJs;
 exports.concatCss = concatCssPlugins;
 exports.watch = watchFiles;
-exports.build = gulp.series(compileSass, concatJs, concatCssPlugins);
+
+
+exports.build = gulp.series(
+  cleanDist,
+  compileSass,
+  concatJs,
+  concatCssPlugins,
+  copyFiles
+);
+
 exports.default = exports.build;

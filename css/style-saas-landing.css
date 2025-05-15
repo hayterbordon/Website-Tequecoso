@@ -13,7 +13,7 @@ Assan saas web app landing template stylesheet
 .descripcion-features {
     color: #A5A5A5 !important; 
     font-size: 10px; 
-}
+
 /*
 Basic of template
 */
@@ -470,8 +470,8 @@ strong, b {
   position: relative;
   overflow: hidden;
   padding-bottom: 25px;
-  font-size: 1.4rem;
-  letter-spacing: 2px;
+  font-size: 2.2rem;
+  letter-spacing: -2px;
   font-weight: 500;
   }
   .section-title:after {

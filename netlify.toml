@@ -1,4 +1,10 @@
+[build]
+  command = "gulp build"
+  publish = "./"
+  functions = "functions"  
+
+
 [[redirects]]
-  from = "/"
-  to = "/index-saas2.html"
+  from = "/*"
+  to = "/index.html"
   status = 200
